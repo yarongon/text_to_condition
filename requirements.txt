@@ -1,0 +1,4 @@
+pydantic >= "2.0.0"
+pandas >= "2.0.0"
+openai >= "1.40.0"
+dotenv-cli >= "3.4.0"
