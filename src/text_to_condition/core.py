@@ -1,24 +1,20 @@
 """
-A Python module that contains classes that represent conditions for a dataframe.
+A Python module that contains classes that represent conditions for a dataframe,
+and a function that uses LLM to construct a condition expression out of free text.
 All the classes are subclasses of Pydantic's BaseModel.
 There are two types of conditions:
 1. Column conditions: These conditions are applied to a single column.
 2. Column 'in' conditions: These conditions are applied to a single column and check if the column's value is in a list of values.
 3. and/or conditions: consitions that are applied to two or more conditions.
 """
-"""
-A Python module that uses LLM to construct a condition expression out of free text.
-The condition expression is expressed by a Pydantic model, which is also used for validation.
-"""
 
-
-from typing import List, Literal, Optional, Union
-from pydantic import BaseModel, Field
 import json
+import os
+from typing import Literal
+
 import pandas as pd
 from openai import OpenAI
-import os
-
+from pydantic import BaseModel, Field
 
 openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
@@ -38,7 +34,7 @@ class ColumnCondition(BaseModel):
     operator: Literal["==", "!=", "<", ">", "<=", ">="] = Field(
         ..., title="The operator of the condition."
     )
-    value: Optional[str] = Field(None, title="The value to compare the column to.")
+    value: str | None = Field(None, title="The value to compare the column to.")
 
 
 class ColumnInCondition(BaseModel):
@@ -53,7 +49,7 @@ class ColumnInCondition(BaseModel):
     column_type: Literal["int", "float", "str", "date"] = Field(
         ..., title="The data type of the column"
     )
-    values: List[str] = Field(..., title="The list of values to compare the column to.")
+    values: list[str] = Field(..., title="The list of values to compare the column to.")
 
 
 class ColumnNotInCondition(BaseModel):
@@ -68,7 +64,7 @@ class ColumnNotInCondition(BaseModel):
     column_type: Literal["int", "float", "str", "date"] = Field(
         ..., title="The data type of the column"
     )
-    values: List[str] = Field(..., title="The list of values to compare the column to.")
+    values: list[str] = Field(..., title="The list of values to compare the column to.")
 
 
 class AndCondition(BaseModel):
@@ -77,7 +73,7 @@ class AndCondition(BaseModel):
     """
 
     tag: Literal["AndCondition"] = "AndCondition"
-    conditions: List["Condition"]
+    conditions: list["Condition"]
 
 
 class OrCondition(BaseModel):
@@ -86,10 +82,10 @@ class OrCondition(BaseModel):
     """
 
     tag: Literal["OrCondition"] = "OrCondition"
-    conditions: List["Condition"]
+    conditions: list["Condition"]
 
 
-Condition = Union[ColumnCondition, ColumnInCondition, AndCondition, OrCondition]
+Condition = ColumnCondition | ColumnInCondition | AndCondition | OrCondition
 
 
 class ConditionModel(BaseModel):
@@ -148,4 +144,3 @@ def text_to_condition(free_text: str, columns_info: dict[str, str]) -> Condition
 
 def get_column_metadata(df: pd.DataFrame) -> dict:
     return {col: str(dtype) for col, dtype in df.dtypes.items()}
-
