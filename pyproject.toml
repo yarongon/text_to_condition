@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "text-to-condition"
+version = "0.0.1"
+dependencies = [
+    "dotenv-cli>=3.4.0",
+    "openai>=1.40.0",
+    "pandas>=2.0.0",
+    "pydantic>=2.0.0",
+]
+requires-python = ">=3.11"
+authors = [{ name = "Yaron Gonen", email = "yaron.gonen@gmail.com" }]
+description = "A module to convert text to formal condition using LLM"
+readme = "README.md"
+license = { file = "LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Repository = "https://github.com/yarongon/text_to_condition.git"
+Issues = "https://github.com/yarongon/text_to_condition/issues"
+
+[dependency-groups]
+dev = ["pytest-cov>=2.12.1", "pytest>=6.2.4"]

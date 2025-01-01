@@ -1,7 +1,5 @@
-import pytest
-import pandas as pd
-from src.text_to_condition.core import text_to_condition
-from src.text_to_condition.core import (
+from text_to_condition.core import text_to_condition
+from text_to_condition.core import (
     ColumnCondition, 
     ColumnInCondition,
     AndCondition,
