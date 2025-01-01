@@ -12,7 +12,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt && pip install --user -r requirements-dev.txt",
+	"postCreateCommand": "pip3 install --user uv && uv sync --dev",
 	// "postCreateCommand": "pip install poetry && poetry install",
 
 	// Configure tool-specific properties.
